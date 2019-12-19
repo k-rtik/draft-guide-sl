@@ -1,4 +1,0 @@
-SSL certs needed:
-- storage.googleapis.com (https://www.googleapis.com/oauth2/v3/certs)
-- api.stackexchange.com (https://api.stackexchange.com/docs/authentication)
-- generate one from openssl for our service
