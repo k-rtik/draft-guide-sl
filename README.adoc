@@ -287,7 +287,7 @@ You developed a REST service in Open Liberty by using JAX-RS and JSON-B.
 
 == Related Links
 
-Learn more about MicroProfile.
+Earn more about MicroProfile.
 
 https://microprofile.io/[See the MicroProfile specs^]
 
