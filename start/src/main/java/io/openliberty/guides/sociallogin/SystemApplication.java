@@ -1,3 +1,4 @@
+// tag::comment[]
 /*******************************************************************************
  * Copyright (c) 2017, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -8,19 +9,13 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package io.openliberty.guides.rest;
+// end::comment[]
+package io.openliberty.guides.sociallogin;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Application;
+import javax.ws.rs.ApplicationPath;
 
-@Path("hello")
-public class HelloService {
+@ApplicationPath("/")
+public class SystemApplication extends Application {
 
-    @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String greet() {
-        return "Hello, friend!";
-    }
 }

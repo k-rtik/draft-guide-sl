@@ -5,6 +5,10 @@
         <feature>transportSecurity-1.0</feature>
         <feature>socialLogin-1.0</feature>
         <feature>ssl-1.0</feature>
+        <feature>jwt-1.0</feature>
+        <!-- Enable the following features to run tests with Arquillian managed container -->
+        <feature>localConnector-1.0</feature>
+        <feature>servlet-4.0</feature>
     </featureManager>
 
     <httpEndpoint httpPort="${default.http.port}" httpsPort="${default.https.port}"
@@ -14,47 +18,48 @@
     <keyStore id="defaultKeyStore" location="${server.output.dir}/resources/security/key.p12" password="changeit" type="PKCS12" />
     <keyStore id="socialLoginKeyStore" location="${server.output.dir}/resources/security/slts.p12" password="changeit" type="PKCS12" />
 
-    <!-- SSL configuration -->
+    <!-- SSL configuration for auth services -->
     <ssl id="authServiceSslRef" keyStoreRef="defaultKeyStore" trustStoreRef="socialLoginKeyStore" />
 
-    <!-- Configuration for google Login -->
-    <googleLogin id="googleLogin" clientId="1032029614724-6etq767uh4t70qk8rpist3l57f3qes2d.apps.googleusercontent.com" clientSecret="Z8w4R55m-3nHm4Got-tB7y-w" sslRef="authServiceSslRef" />
+    <!-- Social Login Configuration -->
+    <!-- Github Login -->
+    <githubLogin clientId="" clientSecret="" sslRef="authServiceSslRef" />
+    <!-- Amazon Login -->
+    <oauth2Login id="amazonLogin"
+                 displayName="Amazon"
+                 clientId="5"
+                 clientSecret=""
+                 responseType="code"
+                 sslRef="authServiceSslRef"
+                 tokenEndpointAuthMethod="client_secret_post"
+                 authorizationEndpoint="https://www.amazon.com/ap/oa"
+                 tokenEndpoint="https://api.amazon.com/auth/o2/token"
+                 userApi="https://api.amazon.com/user/profile"
+                 scope="profile"
+                 userNameAttribute="name"
+                 userUniqueIdAttribute="user_id"
+                 website="www.amazon.com" />
+    <!-- Google OIDC Login using discovery URL -->
+    <oidcLogin id="googleOIDCLogin"
+               displayName="Google"
+               clientId=""
+               clientSecret=""
+               sslRef="authServiceSslRef"
+               authorizationEndpoint="https://accounts.google.com/o/oauth2/v2/auth"
+               tokenEndpoint="https://www.googleapis.com/oauth2/v4/token"
+               jwksUri="https://www.googleapis.com/oauth2/v3/certs"
+               scope="openid profile email"
+               userNameAttribute="email"
+               realmNameAttribute="iss"
+               issuer="https://accounts.google.com"/>
 
-
-<!--    <oauth2Login id="pinterestLogin" clientId="5072342745587163733" clientSecret="0798f5d8fc1fd98c3b44affb4830bb8179e6c28bf64823bec9a2dc0137e98bac"-->
-<!--                 scope="read_public"-->
-<!--                 responseType="code"-->
-<!--                 tokenEndpointAuthMethod="client_secret_post"-->
-<!--                 authorizationEndpoint="https://api.pinterest.com/oauth/"-->
-<!--                 tokenEndpoint="https://api.pinterest.com/v1/oauth/token"-->
-<!--                 userApi="https://api.pinterest.com/v1/me"-->
-<!--                 userNameAttribute="id"-->
-<!--                 website="https://developers.pinterest.com/docs/api/overview/">-->
-
-    <!-- Configuration for custom OAuth2 Login -->
-    <oauth2Login
-        id="stackExchangeLogin"
-        authorizationEndpoint="https://stackoverflow.com/oauth"
-        clientId="16882"
-        clientSecret="RO31ejyB)BfAqHz3xO*hfg(("
-        displayName="StackExchange"
-        responseType="code"
-        scope=""
-        sslRef="authServiceSslRef"
-        tokenEndpoint="https://stackoverflow.com/oauth/access_token/json"
-        tokenEndpointAuthMethod="client_secret_post"
-        userApi="https://api.stackexchange.com/2.2/me?order=desc&amp;sort=reputation&amp;site=stackoverflow"
-        userNameAttribute="items[0].display_name"
-        userUniqueIdAttribute="items[0].account_id"
-        website="https://api.stackexchange.com"
-        />
-
-
-    <webApplication location="guide-rest-intro.war" contextRoot="${app.context.root}">
+    <webApplication location="draft-guide-social-login.war" contextRoot="${app.context.root}">
         <application-bnd>
             <security-role name="users">
                 <special-subject type="ALL_AUTHENTICATED_USERS"/>
             </security-role>
         </application-bnd>
     </webApplication>
+
+    <applicationMonitor updateTrigger="mbean"/>
 </server>

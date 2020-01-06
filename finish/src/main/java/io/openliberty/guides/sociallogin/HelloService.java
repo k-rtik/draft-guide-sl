@@ -8,7 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package io.openliberty.guides.rest;
+package io.openliberty.guides.sociallogin;
 
 import javax.annotation.security.RolesAllowed;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +19,6 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 @Path("hello")
-@RolesAllowed({"users"})
 public class HelloService {
 
     @Context
@@ -27,14 +26,10 @@ public class HelloService {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
+    @RolesAllowed({"users"})
     public String greet() {
-        String remoteUser = request.getRemoteUser();
-        String principalName = request.getUserPrincipal() == null ? null : request.getUserPrincipal().getName();
-
-        String response = "Hello, " + (principalName == null ? "friend" : principalName + "!\n");
-        response += "Your remote user is: " + remoteUser + "\n";
-
-        return response;
+        if (request.getUserPrincipal() == null) return "Hello, friend!";
+        return "Hello, " + request.getUserPrincipal().getName() + '\n' + request.getUserPrincipal().toString();
     }
 
 }

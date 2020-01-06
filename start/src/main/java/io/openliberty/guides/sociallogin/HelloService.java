@@ -5,15 +5,22 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  *
- * Contributors
+ * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
-package io.openliberty.guides.rest;
+package io.openliberty.guides.sociallogin;
 
-import javax.ws.rs.core.Application;
-import javax.ws.rs.ApplicationPath;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
-@ApplicationPath("api")
-public class SystemApplication extends Application {
+@Path("hello")
+public class HelloService {
 
+    @GET
+    @Produces(MediaType.TEXT_PLAIN)
+    public String greet() {
+        return "Hello, friend!";
+    }
 }
