@@ -48,6 +48,7 @@ The application we will build in this guide requires certificates for Amazon, Go
 You also need to create certificates that your service will provide for HTTPS connections. These public/private keys will need to be added to the keystore.
 
 To get the certificates for Amazon, Google and Github,
+
 1. Open the website on Firefox.
 1. Click on the button next to "Connection Secure".
 1. Click on "More Information".
