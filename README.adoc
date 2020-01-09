@@ -6,54 +6,84 @@
 // Contributors:
 //     IBM Corporation
 //
-:projectid: rest-intro
+:projectid: social-login
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2017-09-19
 :page-guide-category: microprofile
 :page-essential: true
 :page-essential-order: 1
-:page-description: Learn how to create a REST service with JAX-RS, JSON-B, and Open Liberty.
+:page-description: Learn how to secure a REST service with the Open Liberty SocialLogin feature.
 :guide-author: Open Liberty
-:page-tags: ['MicroProfile', 'Java EE', 'Jakarta EE']
+:page-tags: ['Social Login', 'Java EE', 'Jakarta EE']
 :page-related-guides: ['rest-client-java', 'rest-client-angularjs']
 :page-permalink: /guides/{projectid}
-:page-seo-title: Creating a simple REST service 
-:page-seo-description: A tutorial on how to create a REST service in Open Liberty using JAX-RS and JSON-B
+:page-seo-title: Securing a REST service with Social Login
+:page-seo-description: A tutorial on how to secure a REST service in Open Liberty using the SocialLogin feature
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
-= Creating a RESTful web service
+= Securing a RESTful web service with Social Login
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to create a REST service with JAX-RS, JSON-B, and Open Liberty.
+Learn how to secure a REST service with the Open Liberty SocialLogin feature.
 
 == What you'll learn
 
-You will learn how to build and test a simple REST service with JAX-RS and JSON-B, which will expose
-the JVM's system properties. The REST service will respond to `GET` requests made to the `\http://localhost:9080/LibertyProject/System/properties` URL.
+You will learn how to secure and test a simple REST service with SocialLogin.
+The service responds to a `GET` request with a Plain Text response that looks like this:
 
-The service responds to a `GET` request with a JSON representation of the system properties, where
-each property is a field in a JSON object like this:
-
-[source,json,role="no_copy"]
+[source,role="no_copy"]
 ----
-{
-  "os.name":"Mac",
-  "java.version": "1.8"
-}
+Hello, friend!
 ----
 
-When you create a new REST application, the design of the API is important. The JAX-RS APIs can be
-used to create JSON-RPC, or XML-RPC APIs, but it wouldn't be a RESTful service. A good RESTful service
-is designed around the resources that are exposed, and on how to create, read, update, and delete the
-resources.
+In order to secure this endpoint, you will use the Open Liberty `SocialLogin` feature.
+This feature allows you to easily secure your service using social media OAuth2 and OpenID Connect providers.
 
-The service responds to `GET` requests to the `/System/properties` path. The `GET` request should
-return a `200 OK` response that contains all of the JVM's system properties.
+=== Prerequisites
 
-[role="command"]
-include::{common-includes}/gitclone.adoc[]
+Before you can run/build the application, you will need to get the required certificates.
+The application we will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
+You also need to create certificates that your service will provide for HTTPS connections. These public/private keys will need to be added to the keystore.
+
+To get the certificates for Amazon, Google and Github,
+1. Open the website on Firefox.
+1. Click on the button next to "Connection Secure".
+1. Click on "More Information".
+1. Click on "View Certificate".
+1. Download each certificate in the chain as a separate `PEM` file.
+
+Once you have the certificates downloaded, you need to add them to the trust store.
+As part of the guide, you will be configuring the application's trust store to be `slts.p12` whose password is `changeit`.
+Run the following command to add a certificate to the trust store. The command also creates the trust store file if it doesn't exist.
+[role='command']
+```
+keytool -import -trustcacerts -file <certificate-file-name> -alias <certificate-alias> -keystore slts.p12 -storetype PKCS12 -storepass changeit
+```
+
+To generate certificates for your service to use for HTTPS connections, run the following command:
+[role='command']
+```
+openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365
+```
+
+Before the certificate and private key can be imported into the key store for your service, it needs to be converted into one `PKCS12` bundle.
+Combine your key and certificate by running the following command:
+[role='command']
+```
+openssl pkcs12 -inkey key.pem -in cert.pem -export -out certificate.p12
+```
+
+The key store to be used by social login will be configured to be `key.p12` whose password is `changeit`.
+To import your certificate bundle into this keystore, run the following command:
+[role='command']
+```
+keytool -importkeystore -srckeystore certificate.p12 -srcstoretype PKCS12 -destkeystore key.p12 -deststoretype PKCS12
+```
+
+Lastly, in order to use the new key store and trust store, copy these files into `src/main/liberty/resources/security`
+in the `start` and `finish` directories.
 
 === Try what you'll build
 
@@ -67,7 +97,7 @@ mvn liberty:run
 ```
 
 Check out the service at the
-http://localhost:9080/LibertyProject/System/properties[^] URL. 
+http://localhost:9080/api/hello[^] URL.
 
 After you are done checking out the application, stop the Open Liberty server by pressing `CTRL+C`
 in the shell session where you ran the server. Alternatively, you can run the `liberty:stop` goal 
@@ -78,7 +108,7 @@ from the `finish` directory in another shell session:
 mvn liberty:stop
 ```
 
-== Creating a JAX-RS application
+== Securing a JAX-RS application
 
 Navigate to the `start` directory to begin.
 

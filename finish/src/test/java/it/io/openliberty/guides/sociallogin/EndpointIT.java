@@ -12,34 +12,36 @@
 // end::comment[]
 package it.io.openliberty.guides.sociallogin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EndpointIT {
+class EndpointIT {
 
     @Test
-    public void testHelloRedirectsToSocialLoginForm() {
+    void testHelloRedirectsToSocialLoginForm() {
 
-        String url = "http://localhost:" + System.getProperty("http.port") + "/" + System.getProperty("context.root") + "/";
+        // Construct URL for protected service
+        String url = "http://localhost:" + System.getProperty("http.port") + "/" + System.getProperty("context.root") + "/hello";
 
-        Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(url + "hello");
-        Response response = target.request().get();
+        // Get response from service
+        Response response = ClientBuilder.newClient()
+                .target(url)
+                .request()
+                .get();
 
-        assertEquals("Incorrect response code from " + url,
-                Response.Status.OK.getStatusCode(), response.getStatus());
+        // Service must get 200
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), "Incorrect response code from " + url);
 
+        // The response must be the selection form for social media login provider
         String message = response.readEntity(String.class);
         String expectedMessage = "Social Media Selection Form";
+        assertTrue(message.contains(expectedMessage), "Incorrect response from " + url + ". Did not redirect to social login form");
 
-        assertTrue("Incorrect message in response from " + url, message.contains(expectedMessage));
         response.close();
     }
 }
