@@ -204,6 +204,12 @@ users that are authenticated using social media login to access your `HelloServi
 `start/src/main/liberty/config/server.xml`
 ----
 
+Server.xml
+[source, xml, linenums, role='code_column hide_tags=comment']
+----
+include::finish/src/main/liberty/config/server.xml[]
+----
+
 Add the following OpenLiberty [hotspot=features]`feature elements` to `server.xml`:
 
 [role="command"]
