@@ -153,6 +153,8 @@ In this guide, you will secure your `Hello` service with three social media logi
 1. Amazon login using a custom `oauth2Login`
 1. Google login using a custom `oidcLogin`
 
+=== Securing Hello Service
+
 [role="code_command hotspot" ,subs="quotes"]
 ----
 #Update the `HelloService` class.#
@@ -176,26 +178,17 @@ Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information
 
 === Configuring the security roles
 
-Modify the [hotspot=webApplication]`webApplication` tag in `server.xml` to create the security role `users` by adding
-the following element:
-
-[role="command"]
-----
-    <application-bnd>
-        <security-role name="users">
-            <special-subject type="ALL_AUTHENTICATED_USERS"/>
-        </security-role>
-    </application-bnd>
-----
-
-This configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
-users that are authenticated using social media login to access your `HelloService` service.
-
 [role="code_command hotspot", subs="quotes"]
 ----
-#Create the `server.xml` file.#
-`src/main/liberty/config/server.xml`
+#Update the `server.xml` file.#
+`start/src/main/liberty/config/server.xml`
 ----
+
+Modify the [hotspot=webApplicationStart]`webApplication` tag in [hotspot=server]`server.xml` to create the security role `users` by adding
+the [hotspot=applicationBnd]`application-bnd` element:
+
+The [hotspot=applicationBnd]`application-bnd` configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
+users that are authenticated using social media login to access your `HelloService` service.
 
 === Configuring the server to add social media login
 

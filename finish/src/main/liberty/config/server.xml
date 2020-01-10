@@ -52,11 +52,13 @@
 
     <!-- tag::webApplication[] -->
     <webApplication location="draft-guide-social-login.war" contextRoot="${app.context.root}">
+        <!-- tag::applicationBnd[] -->
         <application-bnd>
             <security-role name="users">
                 <special-subject type="ALL_AUTHENTICATED_USERS"/>
             </security-role>
         </application-bnd>
+        <!-- end::applicationBnd[] -->
     </webApplication>
     <!-- end::webApplication[] -->
 
