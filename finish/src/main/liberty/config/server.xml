@@ -27,8 +27,11 @@
 
     <!-- Social Login Configuration -->
     <!-- Github Login -->
+    <!-- tag::githubLogin[] -->
     <githubLogin clientId="" clientSecret="" sslRef="authServiceSslRef"/>
+    <!-- end::githubLogin[] -->
     <!-- Amazon Login -->
+    <!-- tag::amazonLogin[] -->
     <oauth2Login id="amazonLogin"
                  displayName="Amazon"
                  clientId=""
@@ -43,7 +46,9 @@
                  userNameAttribute="name"
                  userUniqueIdAttribute="user_id"
                  website="www.amazon.com" />
+    <!-- end::amazonLogin[] -->
     <!-- Google OIDC Login using discovery URL -->
+    <!-- tag::googleOIDCLogin[] -->
     <oidcLogin id="googleOIDCLogin"
                displayName="Google"
                clientId=""
@@ -56,7 +61,8 @@
                userNameAttribute="email"
                realmNameAttribute="iss"
                issuer="https://accounts.google.com"/>
-
+    <!-- end::googleOIDCLogin[] -->
+    
     <!-- tag::webApplication[] -->
     <webApplication location="draft-guide-social-login.war" contextRoot="${app.context.root}">
         <!-- tag::applicationBnd[] -->
