@@ -231,41 +231,30 @@ Before you add social media login configuration elements, there are some prerequ
 
 === Configuring the key store and trust store
 
-This resource class has quite a bit of code in it, so let's break it down into manageable chunks.
-
-The [hotspot=path file=0]`@Path` annotation on the class indicates that this resource responds to the `properties` path
-in the JAX-RS application. The [hotspot=applicationPath file=1]`@ApplicationPath` annotation in the [hotspot=systemApplication file=1]`SystemApplication` class together with
-the [hotspot=path file=0]`@Path` annotation in this class indicates that the resource is available at the `System/properties`
-path.
-
-JAX-RS maps the HTTP methods on the URL to the methods on the class. The method to call is determined
-by the annotations that are specified on the methods. In the application you are building, an HTTP `GET` request
-to the `System/properties` path results in the system properties being returned.
-
-The [hotspot=get file=0]`@GET` annotation on the method indicates that this method is to be called for the HTTP `GET`
-method. The [hotspot=produces file=0]`@Produces` annotation indicates the format of the content that will be returned. The
-value of the [hotspot=produces file=0]`@Produces` annotation will be specified in the HTTP `Content-Type` response header.
-For this application, a JSON structure is to be returned. The desired `Content-Type` for a JSON
-response is `application/json` with `MediaType.APPLICATION_JSON` instead of the `String` content type. Using a constant such as `MediaType.APPLICATION_JSON` is better because if there's a spelling error, a compile failure occurs.
-
-JAX-RS supports a number of ways to marshal JSON. The JAX-RS 2.1 specification mandates JSON-Binding
-(JSON-B) and JAX-B. 
-
-The method body returns the result of `System.getProperties()` that is of type `java.util.Properties`. Since the method 
-is annotated with `@Produces(MediaType.APPLICATION_JSON)`, JAX-RS uses JSON-B to automatically convert the returned object
-to JSON data in the HTTP response.
-
-PropertiesResource.java
-[source,java,linenums,role='code_column hide_tags=comment']
+[role="code_command hotspot", subs="quotes"]
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/PropertiesResource.java[]
+#Update the `server.xml` file.#
+`start/src/main/liberty/config/server.xml`
 ----
 
-SystemApplication.java
-[source,java,linenums,role='code_column hide_tags=comment']
+Server.xml
+[source, xml, linenums, role='code_column hide_tags=comment']
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[]
+include::finish/src/main/liberty/config/server.xml[]
 ----
+
+In the prerequisites section, you created two key stores, `slts.p12` and `key.p12`. Now you will configure your application
+to use these key stores. Files in the `src/liberty` folder are copied into the location specified by `${server.output.dir}`,
+so the location of these key stores is `${server.output.dir}/resources/security`.
+
+Create a [hotspot=keystore]`keyStore` configuration element whose location is `${server.output.dir}/resources/security/key.p12`.
+Provide the password that you used when creating the key store. This `defaultKeyStore` will be used to provide SSL certificates when initiating HTTPS connections for social media login.
+
+Next, create a [hotspot=truststore]`keyStore` configuration element whose locaiton is `${server.output.dir}/resources/security/slts.p12`.
+Provide the password that you usd when creating the trust store. This `socialLoginKeyStore` will be usd to store trusted certificates when initiating HTTPS connections to social media APIs for authorization and authentication.
+
+Finally, create a [hotspot=sslConfig]`ssl` configuration element which references `defaultKeyStore` as the key store and `socialLoginKeyStore` as the trust store.
+This SSL configuration will be provided to social media login configurations.
 
 == Configuring the server
 
