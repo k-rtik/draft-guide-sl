@@ -21,15 +21,23 @@ import javax.ws.rs.core.MediaType;
 @Path("hello")
 public class HelloService {
 
+    // tag::httpServletRequestContext
     @Context
     HttpServletRequest request;
+    // end::httpServletRequestContext
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
+    // tag::rolesAllowed[]
     @RolesAllowed({"users"})
+    // end::rolesAllowed[]
+
+
+    // tag::userPrincipal[]
     public String greet() {
         if (request.getUserPrincipal() == null) return "Hello, friend!";
         return "Hello, " + request.getUserPrincipal().getName() + '\n' + request.getUserPrincipal().toString();
     }
+    // end::userPrincipal[]
 
 }
