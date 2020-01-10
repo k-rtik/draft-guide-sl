@@ -181,10 +181,16 @@ Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information
 [role="code_command hotspot", subs="quotes"]
 ----
 #Update the `server.xml` file.#
-`start/src/main/liberty/config/server.xml`
+`src/main/liberty/config/server.xml`
 ----
 
-Modify the [hotspot=webApplicationStart]`webApplication` tag in `server.xml` to create the security role `users` by adding
+Server.xml
+[source, xml, linenums, role='code_column hide_tags=comment']
+----
+include::finish/src/main/liberty/config/server.xml[]
+----
+
+Modify the [hotspot=webApplication]`webApplication` tag in `server.xml` to create the security role `users` by adding
 the [hotspot=applicationBnd]`application-bnd` element:
 
 The [hotspot=applicationBnd]`application-bnd` configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
@@ -192,15 +198,21 @@ users that are authenticated using social media login to access your `HelloServi
 
 === Configuring the server to add social media login
 
-Add the following OpenLiberty [hotspot=features] features to `server.xml`:
+[role="code_command hotspot", subs="quotes"]
+----
+#Update the `server.xml` file.#
+`start/src/main/liberty/config/server.xml`
+----
+
+Add the following OpenLiberty [hotspot=features]`feature elements` to `server.xml`:
 
 [role="command"]
 ----
-    <feature>appSecurity-3.0</feature>
-    <feature>transportSecurity-1.0</feature>
-    <feature>socialLogin-1.0</feature>
-    <feature>ssl-1.0</feature>
-    <feature>jwt-1.0</feature>
+<feature>appSecurity-3.0</feature>
+<feature>transportSecurity-1.0</feature>
+<feature>socialLogin-1.0</feature>
+<feature>ssl-1.0</feature>
+<feature>jwt-1.0</feature>
 ----
 
 These features enable SocialLogin and other related features.
@@ -209,7 +221,7 @@ Before you add social media login configuration elements, there are some prerequ
 
 1. Create a `keyStore` configuration element that corresponds to the key store created in the prerequisites section
 2. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
-3. Create an `ssl` configuration element for configuring the `ssl` configuration that is used to connect to the social media
+3. Create an `ssl` configuration element for configuring the SSL configuration that is used to connect to the social media
 
 === Configuring the key store and trust store
 
