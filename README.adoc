@@ -35,8 +35,8 @@ You will learn how to secure and test a simple REST service with SocialLogin. Yo
 You will secure your `Hello` service with three social media login choices:
 
 1. Github login
-1. Amazon login
-1. Google login
+2. Amazon login
+3. Google login
 
 `HelloService` is an existing microservice that responds to a `GET` request with a Plain Text response that looks like this:
 
@@ -58,10 +58,10 @@ Lastly, you need to create applications on the three social media developer plat
 To get the certificates for Amazon, Google and Github,
 
 1. Open the website on Firefox.
-1. Click on the button next to "Connection Secure".
-1. Click on "More Information".
-1. Click on "View Certificate".
-1. Download each certificate in the chain as a separate `PEM` file.
+2. Click on the button next to "Connection Secure".
+3. Click on "More Information".
+4. Click on "View Certificate".
+5. Download each certificate in the chain as a separate `PEM` file.
 
 Once you have the certificates downloaded, you need to add them to the trust store.
 As part of the guide, you will be configuring the application's trust store to be `slts.p12` whose password is `changeit`.
@@ -142,16 +142,16 @@ mvn liberty:dev
 The `socialLogin` feature provides the following social login configurations:
 
 1. `facebookLogin`
-1. `githubLogin`
-1. `googleLogin`
-1. `linkedinLogin`
+2. `githubLogin`
+3. `googleLogin`
+4. `linkedinLogin`
 
 The feature also provides the `oauth2Login` and `oidcLogin` configuration elements for creating custom social media login configurations.
 In this guide, you will secure your `Hello` service with three social media login choices:
 
 1. Github login using `githubLogin`
-1. Amazon login using a custom `oauth2Login`
-1. Google login using a custom `oidcLogin`
+2. Amazon login using a custom `oauth2Login`
+3. Google login using a custom `oidcLogin`
 
 === Securing Hello Service
 
@@ -184,7 +184,7 @@ Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information
 `start/src/main/liberty/config/server.xml`
 ----
 
-Modify the [hotspot=webApplicationStart]`webApplication` tag in [hotspot=server]`server.xml` to create the security role `users` by adding
+Modify the [hotspot=webApplicationStart]`webApplication` tag in `server.xml` to create the security role `users` by adding
 the [hotspot=applicationBnd]`application-bnd` element:
 
 The [hotspot=applicationBnd]`application-bnd` configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
@@ -208,8 +208,8 @@ These features enable SocialLogin and other related features.
 Before you add social media login configuration elements, there are some prerequisite configurations that need to be made:
 
 1. Create a `keyStore` configuration element that corresponds to the key store created in the prerequisites section
-1. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
-1. Create an `ssl` configuration element for configuring the `ssl` configuration that is used to connect to the social media
+2. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
+3. Create an `ssl` configuration element for configuring the `ssl` configuration that is used to connect to the social media
 
 === Configuring the key store and trust store
 
