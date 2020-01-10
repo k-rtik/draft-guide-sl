@@ -62,7 +62,7 @@
                realmNameAttribute="iss"
                issuer="https://accounts.google.com"/>
     <!-- end::googleOIDCLogin[] -->
-    
+
     <!-- tag::webApplication[] -->
     <webApplication location="draft-guide-social-login.war" contextRoot="${app.context.root}">
         <!-- tag::applicationBnd[] -->
