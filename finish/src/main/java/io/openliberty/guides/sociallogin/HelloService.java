@@ -31,8 +31,6 @@ public class HelloService {
     // tag::rolesAllowed[]
     @RolesAllowed({"users"})
     // end::rolesAllowed[]
-
-
     // tag::userPrincipal[]
     public String greet() {
         if (request.getUserPrincipal() == null) return "Hello, friend!";
