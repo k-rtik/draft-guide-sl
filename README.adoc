@@ -302,34 +302,6 @@ for authentication. When you select a login choice, you will be redirected to th
 
 Make sure that the `id` of your [hotspot=amazonLogin]`oauth2Login` configuration matches the redirect URL (if you set the `id` to `amazonLogin`, the redirect URL must end with `.../amazonLogin`).
 
-=== Adding Google login configuration
-
-Lastly, you will configure Google login using a custom `oidcLogin` configuration element.
-
-Create a [hotspot=googleOIDCLogin]`oidcLogin` configuration element using the `clientId` and `clientSecret` for your Google application
-that you created in the prerequisites section. Add the following attributes to your [hotspot=googleOIDCLogin]`oidcLogin` configuration element:
-
-- `displayName`: `Google`
-- `authorizationEndpoint`: `https://accounts.google.com/o/oauth2/v2/auth`
-- `tokenEndpoint`: `https://www.googleapis.com/oauth2/v4/token`
-- `jwksUri`: `https://www.googleapis.com/oauth2/v3/certs`
-- `scope`: `openid profile email`
-- `userNameAttribute`: `email`
-- `realmNameAttribute`: `iss`
-- `issuer`: `https://accounts.google.com`
-
-Further documentation on these attributes can be found on the https://openliberty.io/docs/ref/config/oidcLogin.html[Open Liberty config reference on `oidcLogin`].
-The values of these attributes can be found in the https://developers.google.com/identity/protocols/OpenIDConnect[Google API documentation].
-
-In addition to these attributes, add the ID of the [hotspot=sslConfig]`ssl` configuration that you created in the previous section
-to the `sslRef` attribute of [hotspot=googleOIDCLogin]`oidcLogin`.
-
-When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
-you should be redirected to a Social Media Login Form. This form allows you to choose which login provider you want to use
-for authentication. When you select a login choice, you will be redirected to the login page of that service.
-
-Make sure that the `id` of your [hotspot=googleOIDCLogin]`oauth2Login` configuration matches the redirect URL (if you set the `id` to `googleOIDCLogin`, the redirect URL must end with `.../googleOIDCLogin`).
-
 == Building and running the application
 
 The Open Liberty server was started in development mode at the beginning of the guide and all the 
