@@ -30,8 +30,15 @@ Learn how to secure a REST service with the Open Liberty SocialLogin feature.
 
 == What you'll learn
 
-You will learn how to secure and test a simple REST service with SocialLogin.
-The service responds to a `GET` request with a Plain Text response that looks like this:
+You will learn how to secure and test a simple REST service with SocialLogin. You will secure an existing service,
+`HelloService` using social media OAuth2 and OpenID Connect.
+You will secure your `Hello` service with three social media login choices:
+
+1. Github login
+1. Amazon login
+1. Google login
+
+`HelloService` is an existing microservice that responds to a `GET` request with a Plain Text response that looks like this:
 
 [source,role="no_copy"]
 ----
@@ -39,13 +46,14 @@ Hello, friend!
 ----
 
 In order to secure this endpoint, you will use the Open Liberty `SocialLogin` feature.
-This feature allows you to easily secure your service using social media OAuth2 and OpenID Connect providers.
+This feature allows you to easily secure your service
 
 === Prerequisites
 
-Before you can run/build the application, you will need to get the required certificates.
+Before you can run/build the application, you will need to add the social media domains' certificates to the truststore for social login.
 The application we will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
-You also need to create certificates that your service will provide for HTTPS connections. These public/private keys will need to be added to the keystore.
+You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the keystore for social login.
+Lastly, you need to create applications on the three social media developer platforms to obtain a client ID and client secret to use their APIs.
 
 To get the certificates for Amazon, Google and Github,
 
@@ -83,8 +91,18 @@ To import your certificate bundle into this keystore, run the following command:
 keytool -importkeystore -srckeystore certificate.p12 -srcstoretype PKCS12 -destkeystore key.p12 -deststoretype PKCS12
 ```
 
-Lastly, in order to use the new key store and trust store, copy these files into `src/main/liberty/resources/security`
+To use the new key store and trust store, copy these files into `src/main/liberty/resources/security`
 in the `start` and `finish` directories.
+
+The last prerequisite step is obtaining client ID and client secret for access to the three social media developer APIs.
+
+In order to obtain OAuth 2.0 credentials for Google, visit the https://console.developers.google.com/ Google API Console.
+
+In order to obtain OAuth 2.0 credentials for Amazon, follow the steps here: https://auth0.com/docs/connections/social/amazon.
+
+In order to obtain OAuth 2.0 credentials for Github, follow the steps here: https://auth0.com/docs/connections/social/github.
+
+In order to try what you'll build, enter the client IDs and client secrets to the `server.xml` in the finish folder.
 
 === Try what you'll build
 
@@ -121,10 +139,21 @@ for file changes:
 mvn liberty:dev
 ```
 
+The `socialLogin` feature provides the following social login configurations:
 
-JAX-RS has two key concepts for creating REST APIs. The most obvious one is the resource itself, which is
-modelled as a class. The second is a JAX-RS application, which groups all exposed resources under a
-common path. You can think of the JAX-RS application as a wrapper for all of your resources.
+1. `facebookLogin`
+1. `githubLogin`
+1. `googleLogin`
+1. `linkedinLogin`
+
+The feature also provides the `oauth2Login` and `oidcLogin` configuration elements for creating custom social media login configurations.
+In this guide, you will secure your `Hello` service with three social media login choices:
+
+1. Github login using `githubLogin`
+1. Amazon login using a custom `oauth2Login`
+1. Google login using a custom `oidcLogin`
+
+
 
 
 [role="code_command hotspot" ,subs="quotes"]
