@@ -229,7 +229,7 @@ Before you add social media login configuration elements, there are some prerequ
 2. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
 3. Create an `ssl` configuration element for configuring the SSL configuration that is used to connect to the social media
 
-=== Configuring the key store and trust store
+=== Configuring SSL for social media login
 
 [role="code_command hotspot", subs="quotes"]
 ----
