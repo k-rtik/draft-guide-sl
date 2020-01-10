@@ -127,7 +127,7 @@ from the `finish` directory in another shell session:
 mvn liberty:stop
 ```
 
-== Securing a JAX-RS application
+== Securing the JAX-RS service
 
 Navigate to the `start` directory to begin.
 
@@ -153,38 +153,67 @@ In this guide, you will secure your `Hello` service with three social media logi
 1. Amazon login using a custom `oauth2Login`
 1. Google login using a custom `oidcLogin`
 
-
-
-
 [role="code_command hotspot" ,subs="quotes"]
 ----
-#Replace the `SystemApplication` class.#
-`src/main/java/io/openliberty/guides/rest/SystemApplication.java`
+#Update the `HelloService` class.#
+`src/main/java/io/openliberty/guides/sociallogin/HelloService.java`
 ----
 
-The [hotspot=systemApplication]`SystemApplication` class extends the `Application` class, which in turn associates all JAX-RS
-resource classes in the WAR file with this JAX-RS application, making them available under the common
-path specified in the [hotspot=systemApplication]`SystemApplication` class. The [hotspot=applicationPath]`@ApplicationPath` annotation has a
-value that indicates the path within the WAR that the JAX-RS application accepts requests from.
+The [hotspot=helloService]`HelloService` class is the JAX-RS service that you will be securing.
+Add the [hotspot=rolesAllowed] `@RolesAllowed({"users"})` annotation to restrict access to the service to users who are
+in the `Users` role.
 
-SystemApplication.java
+HelloService.java
 [source, Java, linenums, role='code_column hide_tags=comment']
 ----
-include::finish/src/main/java/io/openliberty/guides/rest/SystemApplication.java[]
+include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[]
 ----
 
-== Creating the JAX-RS resource
+=== Configuring the security roles
 
-In JAX-RS, a single class should represent a single resource, or a group of resources of the same type.
-In this application, a resource might be a system property, or a set of system properties. It is easy
-to have a single class handle multiple different resources, but keeping a clean separation between types
-of resources helps with maintainability in the long run.
+Modify the [hotspot=webApplication] `webApplication` tag in `server.xml` to create the security role `users` by adding
+the following element:
+
+[role="command"]
+----
+    <application-bnd>
+        <security-role name="users">
+            <special-subject type="ALL_AUTHENTICATED_USERS"/>
+        </security-role>
+    </application-bnd>
+----
+
+This configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
+users that are authenticated using social media login to access your `HelloService` service.
 
 [role="code_command hotspot", subs="quotes"]
 ----
-#Create the `PropertiesResource` class.#
-`src/main/java/io/openliberty/guides/rest/PropertiesResource.java`
+#Create the `server.xml` file.#
+`src/main/liberty/config/server.xml`
 ----
+
+=== Configure the server to add social media login
+
+Add the following OpenLiberty [hotspot=features] features to `server.xml`:
+
+[role="command"]
+---
+    <feature>appSecurity-3.0</feature>
+    <feature>transportSecurity-1.0</feature>
+    <feature>socialLogin-1.0</feature>
+    <feature>ssl-1.0</feature>
+    <feature>jwt-1.0</feature>
+----
+
+These features enable SocialLogin and other related features.
+
+Before you add social media login configuration elements, there are some prerequisite configurations that need to be made:
+
+1. Create a `keyStore` configuration element that corresponds to the key store created in the prerequisites section
+1. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
+1. Create an `ssl` configuration element for configuring the `ssl` configuration that is used to connect to the social media
+
+=== Configuring the key store and trust store
 
 This resource class has quite a bit of code in it, so let's break it down into manageable chunks.
 
