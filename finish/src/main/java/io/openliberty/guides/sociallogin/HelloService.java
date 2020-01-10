@@ -21,10 +21,10 @@ import javax.ws.rs.core.MediaType;
 @Path("hello")
 public class HelloService {
 
-    // tag::httpServletRequestContext
+    // tag::httpServletRequestContext[]
     @Context
     HttpServletRequest request;
-    // end::httpServletRequestContext
+    // end::httpServletRequestContext[]
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)

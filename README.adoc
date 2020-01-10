@@ -170,18 +170,13 @@ include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.jav
 ----
 
 Next, you will replace the `return "Hello, friend!";` to output user information instead of `friend`.
-First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
-Next, use the request user [hotspot=userPrincipal]principal to get information about the logged in user.
 
-[role="code_command"]
-----
-    if (request.getUserPrincipal() == null) return "Hello, friend!";
-    return "Hello, " + request.getUserPrincipal().getName() + '\n' + request.getUserPrincipal().toString();
-----
+First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
+Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
 
 === Configuring the security roles
 
-Modify the [hotspot=webApplication] `webApplication` tag in `server.xml` to create the security role `users` by adding
+Modify the [hotspot=webApplication]`webApplication` tag in `server.xml` to create the security role `users` by adding
 the following element:
 
 [role="command"]
