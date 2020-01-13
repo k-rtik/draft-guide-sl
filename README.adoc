@@ -13,7 +13,7 @@
 :page-guide-category: microprofile
 :page-essential: true
 :page-essential-order: 1
-:page-description: Learn how to secure a REST service with the Open Liberty SocialLogin feature.
+:page-description: Learn how to secure a REST service with the Open Liberty Social Login feature.
 :guide-author: Open Liberty
 :page-tags: ['Social Login', 'Java EE', 'Jakarta EE']
 :page-related-guides: ['rest-client-java', 'rest-client-angularjs']
@@ -26,7 +26,7 @@
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to secure a REST service with the Open Liberty SocialLogin feature.
+Learn how to secure a REST service with the Open Liberty Social Login feature.
 
 == What you'll learn
 
@@ -51,7 +51,7 @@ This feature allows you to easily secure your service
 === Prerequisites
 
 Before you can run/build the application, you will need to add the social media domains' certificates to the truststore for social login.
-The application we will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
+The application you will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
 You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the keystore for social login.
 Lastly, you need to create applications on the three social media developer platforms to obtain a client ID and client secret to use their APIs.
 
@@ -336,13 +336,13 @@ The Open Liberty server was started in development mode at the beginning of the 
 changes were automatically picked up.
 
 Check out the service that you created at the
-http://localhost:9080/LibertyProject/System/properties[^] URL. 
+http://localhost:9080/api/hello[^] URL.
 
 
 == Testing the service
 
 You can test this service manually by starting a server and pointing a web browser at the
-http://localhost:9080/LibertyProject/System/properties[^] URL. Automated tests are a much better
+http://localhost:9080/api/hello[^] URL. Automated tests are a much better
 approach because they trigger a failure if a change introduces a bug. JUnit and the JAX-RS Client
 API provide a simple environment to test the application.
 
@@ -359,7 +359,7 @@ does the latter.
 EndpointIT.java
 [source, Java, linenums, role="code_column hide_tags=comment"]
 ----
-include::finish/src/test/java/it/io/openliberty/guides/rest/EndpointIT.java[]
+include::finish/src/test/java/it/io/openliberty/guides/sociallogin/EndpointIT.java[]
 ----
 
 This test class has more lines of code than the resource implementation. This situation is common.
@@ -371,7 +371,10 @@ pom.xml
 include::finish/pom.xml[]
 ----
 
-The test code needs to know some information about the application to make requests. The server port and the application context root are key, and are dictated by the server configuration. While this information can be hardcoded, it is better to specify it in a single place like the Maven [hotspot=defaultHttpPort hotspot=defaultHttpsPort hotspot=appContextRoot file=1]`pom.xml` file. Refer to the [hotspot file=1]`pom.xml` file to see how the application information such as the [hotspot=defaultHttpPort file=1]`default.http.port`, [hotspot=defaultHttpsPort file=1]`default.https.port` and [hotspot=appContextRoot file=1]`app.context.root` elements are provided in the file.
+The test code needs to know some information about the application to make requests.
+The server port and the application context root are key, and are dictated by the server configuration.
+While this information can be hardcoded, it is better to specify it in a single place like the Maven [hotspot=defaultHttpPort hotspot=defaultHttpsPort hotspot=appContextRoot file=1]`pom.xml` file.
+Refer to the [hotspot file=1]`pom.xml` file to see how the application information such as the [hotspot=defaultHttpPort file=1]`default.http.port`, [hotspot=defaultHttpsPort file=1]`default.https.port` and [hotspot=appContextRoot file=1]`app.context.root` elements are provided in the file.
 
 
 These Maven properties are then passed to the Java test program as the [hotspot=testsysprops file=1]`<systemPropertyVariables/>` element in the [hotspot file=1]`pom.xml` file.
@@ -387,10 +390,9 @@ object, which can be inspected to determine whether the request was successful.
 
 The first thing to check is that a `200` response was received. The JUnit [hotspot=assertequals file=0]`assertEquals` method can be used for this check.
 
-Check the response body to ensure it returned the right information. Since the client and the server
-are running on the same machine, it is reasonable to expect that the system properties for the local
-and remote JVM would be the same. In this case, an [hotspot=assertosname file=0]`assertEquals` assertion is made so that the `os.name` system property
-for both JVMs is the same. You can write additional assertions to check for more values.
+Check the response body to ensure it returned the right information.
+You need to check whether the request gets redirected to the social media login form.
+You can do this by looking for the string `"Social Media Login Form"` in the response string.
 
 === Running the tests
 
@@ -411,7 +413,7 @@ Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
 ----
 
 To see whether the tests detect a failure, add an assertion that you know fails, or change the existing
-assertion to a constant value that doesn't match the `os.name` system property.
+assertion to a constant value that doesn't match the social media login form.
 
 When you are done checking out the service, exit development mode by typing `q` in the shell session where
 you ran the server and then pressing the `enter/return` key.
@@ -419,7 +421,7 @@ you ran the server and then pressing the `enter/return` key.
 
 == Great work! You're done!
 
-You developed a REST service in Open Liberty by using JAX-RS and JSON-B.
+You secured and tested a simple REST service in Open Liberty by using the Social Login feature.
 
 == Related Links
 
