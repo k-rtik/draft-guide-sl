@@ -27,10 +27,16 @@
         <version.maven-surefire-plugin>2.22.2</version.maven-surefire-plugin>
         <version.maven-war-plugin>3.2.3</version.maven-war-plugin>
 
+        <!-- tag::defaultHttpPort[] -->
         <liberty.var.default.http.port>9080</liberty.var.default.http.port>
+        <!-- end::defaultHttpPort[] -->
+        <!-- tag::defaultHttpsPort[] -->
         <liberty.var.default.https.port>9443</liberty.var.default.https.port>
-
+        <!-- end::defaultHttpsPort[] -->
+        <!-- tag::appContextRoot[] -->
         <liberty.var.app.context.root>api</liberty.var.app.context.root>
+        <!-- end::appContextRoot[] -->
+
         <app.name>LibertyProject</app.name>
         <testServerHttpPort>9080</testServerHttpPort>
         <testServerHttpsPort>9443</testServerHttpsPort>

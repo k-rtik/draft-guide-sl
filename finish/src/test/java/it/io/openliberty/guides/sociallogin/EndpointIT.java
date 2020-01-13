@@ -15,33 +15,46 @@ package it.io.openliberty.guides.sociallogin;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class EndpointIT {
-
+    // tag::test[]
     @Test
+    // end::test[]
     void testHelloRedirectsToSocialLoginForm() {
 
-        // Construct URL for protected service
-        String url = "http://localhost:" + System.getProperty("http.port") + "/" + System.getProperty("context.root") + "/hello";
+        // tag::systemProperties[]
+        String httpPort = System.getProperty("http.port");
+        String contextRoot = System.getProperty("context.root");
+        // end::systemProperties[]
 
-        // Get response from service
-        Response response = ClientBuilder.newClient()
-                .target(url)
+        // Construct URL for protected service
+        String url = "http://localhost:" + httpPort + "/" + contextRoot + "/hello";
+
+        // GET response from service
+        // tag::target[]
+        WebTarget target = ClientBuilder.newClient().target(url);
+        // end::target[]
+        // tag::requestGet[]
+        Response response = target
                 .request()
                 .get();
+        // end::requestGet[]
 
         // Service must get 200
+        // tag::assertequals[]
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), "Incorrect response code from " + url);
-
+        // end::assertequals[]
         // The response must be the selection form for social media login provider
+        // tag::assertredirect[]
         String message = response.readEntity(String.class);
         String expectedMessage = "Social Media Selection Form";
         assertTrue(message.contains(expectedMessage), "Incorrect response from " + url + ". Did not redirect to social login form");
-
+        // end::assertredirect[]
         response.close();
     }
 }

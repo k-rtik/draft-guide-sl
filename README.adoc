@@ -338,7 +338,6 @@ changes were automatically picked up.
 Check out the service that you created at the
 http://localhost:9080/api/hello[^] URL.
 
-
 == Testing the service
 
 You can test this service manually by starting a server and pointing a web browser at the
@@ -392,7 +391,7 @@ The first thing to check is that a `200` response was received. The JUnit [hotsp
 
 Check the response body to ensure it returned the right information.
 You need to check whether the request gets redirected to the social media login form.
-You can do this by looking for the string `"Social Media Login Form"` in the response string.
+You can do this by looking for the string [hotspot=assertredirect file=0]`"Social Media Selection Form"` in the response string.
 
 === Running the tests
 
