@@ -39,11 +39,11 @@ class EndpointIT {
         // tag::target[]
         WebTarget target = ClientBuilder.newClient().target(url);
         // end::target[]
-        // tag::requestGet[]
+        // tag::requestget[]
         Response response = target
                 .request()
                 .get();
-        // end::requestGet[]
+        // end::requestget[]
 
         // Service must get 200
         // tag::assertequals[]
