@@ -1,3 +1,4 @@
+// tag::copyright[]
 /*******************************************************************************
  * Copyright (c) 2017, 2019 IBM Corporation and others.
  * All rights reserved. This program and the accompanying materials
@@ -8,6 +9,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+// end::copyright[]
 package io.openliberty.guides.sociallogin;
 
 import javax.annotation.security.RolesAllowed;
@@ -34,8 +36,9 @@ public class HelloService {
     // tag::userPrincipal[]
     public String greet() {
         if (request.getUserPrincipal() == null) return "Hello, friend!";
-        return "Hello, " + request.getUserPrincipal().getName() + '\n' + request.getUserPrincipal().toString();
+        return "Hello, "
+        		+ request.getUserPrincipal().getName() 
+        		+ '\n' + request.getUserPrincipal().toString();
     }
     // end::userPrincipal[]
-
 }
