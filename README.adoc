@@ -136,6 +136,8 @@ First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
 Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
 
 == Configuring the security and social media login
+
+[role="code_command hotspot" ,subs="quotes"]
 ----
 #Update the `server.xml` file.#
 `src/main/liberty/config/server.xml`
