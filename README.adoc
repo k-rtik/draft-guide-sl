@@ -20,7 +20,6 @@
 :page-seo-title: Securing a RESTful web service with Social Media Login
 :page-seo-description: A tutorial on how to secure a RESTful web service in Open Liberty using the SocialLogin feature
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
-
 = Securing a RESTful web service with Social Media Login
 
 [.hidden]
