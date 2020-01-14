@@ -131,16 +131,16 @@ The [hotspot=helloService]`HelloService` class is the JAX-RS service that you wi
 Add the [hotspot=rolesAllowed]`@RolesAllowed({"users"})` annotation to restrict access to the service to users who are
 in the `Users` role.
 
+Next, you will replace the `return "Hello, friend!";` to output user information instead of `friend`.
+
+First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
+Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
+
 HelloService.java 
 [source, Java, linenums, role='code_column'] 
 ---- 
 include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[tags=**;!copyright;]
 ---- 
-
-Next, you will replace the `return "Hello, friend!";` to output user information instead of `friend`.
-
-First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
-Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
 
 == Configuring the security and social media login
 
