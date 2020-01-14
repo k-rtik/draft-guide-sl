@@ -10,27 +10,26 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2017-09-19
-:page-guide-category: microprofile
 :page-essential: true
 :page-essential-order: 1
-:page-description: Learn how to secure a REST service with the Open Liberty Social Login feature.
+:page-description: Learn how to secure a RESTful web service with the Open Liberty Social Media Login feature.
 :guide-author: Open Liberty
-:page-tags: ['Social Login', 'Java EE', 'Jakarta EE']
+:page-tags: ['Social Media Login', 'Java EE', 'Jakarta EE']
 :page-related-guides: ['rest-client-java', 'rest-client-angularjs']
 :page-permalink: /guides/{projectid}
-:page-seo-title: Securing a REST service with Social Login
-:page-seo-description: A tutorial on how to secure a REST service in Open Liberty using the SocialLogin feature
+:page-seo-title: Securing a RESTful web service with Social Media Login
+:page-seo-description: A tutorial on how to secure a RESTful web service in Open Liberty using the SocialLogin feature
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
-= Securing a RESTful web service with Social Login
+= Securing a RESTful web service with Social Media Login
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to secure a REST service with the Open Liberty Social Login feature.
+Learn how to secure a RESTful web service with the Open Liberty Social Media Login feature.
 
 == What you'll learn
 
-You will learn how to secure and test a simple REST service with SocialLogin. You will secure an existing service,
+You will learn how to secure a simple RESTful web service using the https://openliberty.io/docs/ref/feature/#socialLogin-1.0.html[Social Media Login feature]. You will secure an existing service,
 `HelloService` using social media OAuth2 and OpenID Connect.
 You will secure your `Hello` service with three social media login choices:
 
@@ -45,14 +44,11 @@ You will secure your `Hello` service with three social media login choices:
 Hello, friend!
 ----
 
-In order to secure this endpoint, you will use the Open Liberty `SocialLogin` feature.
-This feature allows you to easily secure your service
+== Setting up the certificates and trust store
 
-=== Prerequisites
-
-Before you can run/build the application, you will need to add the social media domains' certificates to the truststore for social login.
-The application you will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
-You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the keystore for social login.
+Before you can build the application, you will need to add the social media domains' certificates to the trust store for social media login.
+The application you will build in this guide requires certificates for Amazon, Google and Github to be added to the trust store.
+You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the key store for social media login.
 Lastly, you need to create applications on the three social media developer platforms to obtain a client ID and client secret to use their APIs.
 
 To get the certificates for Amazon, Google and Github,
@@ -64,7 +60,7 @@ To get the certificates for Amazon, Google and Github,
 5. Download each certificate in the chain as a separate `PEM` file.
 
 Once you have the certificates downloaded, you need to add them to the trust store.
-As part of the guide, you will be configuring the application's trust store to be `slts.p12` whose password is `changeit`.
+As part of the guide, you will configure the application's trust store to be `slts.p12` whose password is `changeit`.
 Run the following command to add a certificate to the trust store. The command also creates the trust store file if it doesn't exist.
 [role='command']
 ```
@@ -84,8 +80,8 @@ Combine your key and certificate by running the following command:
 openssl pkcs12 -inkey key.pem -in cert.pem -export -out certificate.p12
 ```
 
-The key store to be used by social login will be configured to be `key.p12` whose password is `changeit`.
-To import your certificate bundle into this keystore, run the following command:
+The key store to be used by social media login will be configured to be `key.p12` whose password is `changeit`.
+To import your certificate bundle into this key store, run the following command:
 [role='command']
 ```
 keytool -importkeystore -srckeystore certificate.p12 -srcstoretype PKCS12 -destkeystore key.p12 -deststoretype PKCS12
@@ -107,29 +103,6 @@ Set the redirect URL to `https://localhost:9443/ibm/api/social-login/redirect/gi
 
 In order to try what you'll build, enter the client IDs and client secrets to `server.xml` in the `finish` folder.
 
-=== Try what you'll build
-
-The `finish` directory in the root of this guide contains the finished application. Give it a try before you proceed.
-
-To try out the application, first go to the `finish` directory and run the following Maven 
-goal to build the application and deploy it to Open Liberty:
-[role='command']
-```
-mvn liberty:run
-```
-
-Check out the service at the
-http://localhost:9080/api/hello[^] URL.
-
-After you are done checking out the application, stop the Open Liberty server by pressing `CTRL+C`
-in the shell session where you ran the server. Alternatively, you can run the `liberty:stop` goal 
-from the `finish` directory in another shell session:
-
-[role='command']
-```
-mvn liberty:stop
-```
-
 == Securing the JAX-RS service
 
 Navigate to the `start` directory to begin.
@@ -142,7 +115,7 @@ for file changes:
 mvn liberty:dev
 ```
 
-The `socialLogin` feature provides the following social login configurations:
+The `socialLogin` feature provides the following social media login configurations:
 
 1. `facebookLogin`
 2. `githubLogin`
@@ -420,7 +393,7 @@ you ran the server and then pressing the `enter/return` key.
 
 == Great work! You're done!
 
-You secured and tested a simple REST service in Open Liberty by using the Social Login feature.
+You secured and tested a simple RESTful web service in Open Liberty by using the Social Media Login feature.
 
 == Related Links
 
