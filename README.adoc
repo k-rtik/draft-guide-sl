@@ -137,9 +137,9 @@ First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
 Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
 
 HelloService.java 
-[source, Java, linenums, role='code_column'] 
+[source, Java, linenums, role='code_column hide_tags=copyright'] 
 ---- 
-include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[tags=**;!copyright;]
+include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[]
 ---- 
 
 == Configuring the security and social media login
