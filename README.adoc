@@ -54,8 +54,9 @@ By the end of this guide, you will secure your `HelloService` service with three
 2. Amazon login
 3. Google login
 
-== Getting Started
-
+// =================================================================================================
+// Getting Started
+// =================================================================================================
 [role='command']
 include::{common-includes}/gitclone.adoc[]
 
