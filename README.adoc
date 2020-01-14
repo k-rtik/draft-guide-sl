@@ -20,6 +20,7 @@
 :page-seo-title: Securing a RESTful web service with Social Media Login
 :page-seo-description: A tutorial on how to secure a RESTful web service in Open Liberty using the SocialLogin feature
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
+
 = Securing a RESTful web service with Social Media Login
 
 [.hidden]
@@ -52,6 +53,11 @@ By the end of this guide, you will secure your `HelloService` service with three
 1. Github login
 2. Amazon login
 3. Google login
+
+== Getting Started
+
+[role='command']
+include::{common-includes}/gitclone.adoc[]
 
 == Setting up the certificates and trust store
 
@@ -200,13 +206,13 @@ and [hotspot=truststore]`socialLoginKeyStore` as the trust store will be provide
 
 The [hotspot=githubLogin]`githubLogin` configuration element will configure Github login.
 The `clientId` and `clientSecret` for [hotspot=githubLogin]`githubLogin` should be the credentials you created for your Github application
-in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`ssl` configuration from the previous section.
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
 
 === Adding Amazon login configuration
 
 The [hotspot=amazonLogin]`amazonLogin` configuration uses a custom `oauth2Login` configuration element.
 The `clientId` and `clientSecret` for [hotspot=amazonLogin]`amazonLogin` should be the credentials you created for your Amazon application
-in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`ssl` configuration from the previous section.
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
 The following attributes are set for your [hotspot=amazonLogin]`oauth2Login` configuration element:
 
 - `responseType`: `code`
@@ -229,7 +235,7 @@ Make sure that the `id` of your [hotspot=amazonLogin]`oauth2Login` configuration
 
 The [hotspot=googleOIDCLogin]`googleOIDCLogin` configuration uses a custom `oidcLogin` configuration element.
 The `clientId` and `clientSecret` for [hotspot=googleOIDCLogin]`googleOIDCLogin` should be the credentials you created for your Google application
-in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`ssl` configuration from the previous section.
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
 The following attributes are set for your [hotspot=googleOIDCLogin]`oidcLogin` configuration element:
 
 - `displayName`: `Google`

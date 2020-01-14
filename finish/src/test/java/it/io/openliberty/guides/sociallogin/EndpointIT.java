@@ -37,7 +37,9 @@ class EndpointIT {
 
         // GET response from service
         // tag::target[]
-        WebTarget target = ClientBuilder.newClient().target(url);
+        WebTarget target = ClientBuilder
+        		.newClient()
+        		.target(url);
         // end::target[]
         // tag::requestget[]
         Response response = target
@@ -47,13 +49,16 @@ class EndpointIT {
 
         // Service must get 200
         // tag::assertequals[]
-        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus(), "Incorrect response code from " + url);
+        assertEquals(Response.Status.OK.getStatusCode(),
+        		response.getStatus(),
+        		"Incorrect response code from " + url);
         // end::assertequals[]
         // The response must be the selection form for social media login provider
         // tag::assertredirect[]
         String message = response.readEntity(String.class);
         String expectedMessage = "Social Media Selection Form";
-        assertTrue(message.contains(expectedMessage), "Incorrect response from " + url + ". Did not redirect to social login form");
+        assertTrue(message.contains(expectedMessage),
+        		"Incorrect response from " + url + ". Did not redirect to social login form");
         // end::assertredirect[]
         response.close();
     }
