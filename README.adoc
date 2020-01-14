@@ -139,7 +139,7 @@ Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information
 
 [role="code_command hotspot" ,subs="quotes"]
 ----
-#Update the `server.xml` file.#
+#Replace the `server.xml` file.#
 `src/main/liberty/config/server.xml`
 ----
 
