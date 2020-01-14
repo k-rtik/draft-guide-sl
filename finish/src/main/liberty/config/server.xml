@@ -16,9 +16,9 @@
     <!-- Set up default key store, trust stores for auth APIs -->
     <!-- tag::keystore[] -->
     <keyStore id="defaultKeyStore"
-    		  location="${server.output.dir}/resources/security/key.p12"
-    		  password="changeit"
-    		  type="PKCS12" />
+              location="${server.output.dir}/resources/security/key.p12"
+              password="changeit"
+              type="PKCS12" />
     <!-- end::keystore[] -->
     <!-- tag::truststore[] -->
     <keyStore id="socialLoginKeyStore"
