@@ -66,13 +66,13 @@ The application you will build in this guide requires certificates for Amazon, G
 You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the key store for social media login.
 Lastly, you need to create applications on the three social media developer platforms to obtain a client ID and client secret to use their APIs.
 
-To get the certificates for Amazon, Google and Github,
+To get the certificates for Amazon, Google and Github, use a browser.
+For example, open the website on Firefox.
 
-1. Open the website on Firefox.
-2. Click on the button next to "Connection Secure".
-3. Click on "More Information".
-4. Click on "View Certificate".
-5. Download each certificate in the chain as a separate `PEM` file.
+1. Click on the button next to "Connection Secure".
+2. Click on "More Information".
+3. Click on "View Certificate".
+4. Download each certificate in the chain as a separate `PEM` file.
 
 Once you have the certificates downloaded, you need to add them to the trust store.
 As part of the guide, you will configure the application's trust store to be `slts.p12` whose password is `changeit`.
@@ -263,6 +263,14 @@ http://localhost:9080/api/hello[^] URL.
 When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
 you should be redirected to a Social Media Login Form. This form allows you to choose which login provider you want to use
 for authentication. When you select a login choice, you will be redirected to the login page of that service.
+
+Try logging in using your social media accounts. After authenticating, you will be redirected back to https://localhost:9080/api/hello and the response will look like this:
+
+[source,role="no_copy"]
+----
+Hello, <<your username>>
+WSPrincipal:<<your username>>
+----
 
 == Testing the service
 

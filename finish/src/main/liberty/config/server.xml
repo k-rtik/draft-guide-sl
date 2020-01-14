@@ -35,17 +35,12 @@
 
     <!-- Social Login Configuration -->
     <!-- Github Login -->
-    <!-- tag::githubLogin[] -->
-    <githubLogin clientId="" 
-                 clientSecret=""
-                 sslRef="authServiceSslRef"/>
-    <!-- end::githubLogin[] -->
+    <githubLogin clientId="3e65aff2ddd6425d6f4f" clientSecret="2a82e498143453a2763ecb97665371e51c34befd" sslRef="authServiceSslRef" />
     <!-- Amazon Login -->
-    <!-- tag::amazonLogin[] -->
     <oauth2Login id="amazonLogin"
                  displayName="Amazon"
-                 clientId=""
-                 clientSecret=""
+                 clientId="amzn1.application-oa2-client.4ddd2c222ea24123a4d845292b434eb5"
+                 clientSecret="e78d3f670c2542b0a88a1b9d5fb7638f9fe69b5e97f114b335bbe75b14c72546"
                  responseType="code"
                  sslRef="authServiceSslRef"
                  tokenEndpointAuthMethod="client_secret_post"
@@ -56,13 +51,11 @@
                  userNameAttribute="name"
                  userUniqueIdAttribute="user_id"
                  website="www.amazon.com" />
-    <!-- end::amazonLogin[] -->
     <!-- Google OIDC Login using discovery URL -->
-    <!-- tag::googleOIDCLogin[] -->
     <oidcLogin id="googleOIDCLogin"
                displayName="Google"
-               clientId=""
-               clientSecret=""
+               clientId="1032029614724-6etq767uh4t70qk8rpist3l57f3qes2d.apps.googleusercontent.com"
+               clientSecret="Z8w4R55m-3nHm4Got-tB7y-w"
                sslRef="authServiceSslRef"
                authorizationEndpoint="https://accounts.google.com/o/oauth2/v2/auth"
                tokenEndpoint="https://www.googleapis.com/oauth2/v4/token"
