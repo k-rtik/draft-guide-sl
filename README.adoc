@@ -121,13 +121,15 @@ In order to try what you'll build, enter the client IDs and client secrets to `s
 
 == Securing HelloService
 
-[role="code_command hotspot=sections", subs="quotes"] 
+[role="code_command", subs="quotes"] 
 ---- 
 #Update this `HelloService` class.#
 `src/main/java/io/openliberty/guides/sociallogin/HelloService.java`
 ---- 
-[role="edit_command_text"]
-Specific instructions on how to update the file with [hotspot=sections]`sections` hotspotted.
+
+The [hotspot=helloService]`HelloService` class is the JAX-RS service that you will be securing.
+Add the [hotspot=rolesAllowed]`@RolesAllowed({"users"})` annotation to restrict access to the service to users who are
+in the `Users` role.
 
 HelloService.java 
 [source, Java, linenums, role='code_column'] 
