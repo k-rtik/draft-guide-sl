@@ -10,33 +10,27 @@
 :page-layout: guide-multipane
 :page-duration: 30 minutes
 :page-releasedate: 2017-09-19
-:page-guide-category: microprofile
 :page-essential: true
 :page-essential-order: 1
-:page-description: Learn how to secure a REST service with the Open Liberty Social Login feature.
+:page-description: Learn how to secure a RESTful web service with the Open Liberty Social Media Login feature.
 :guide-author: Open Liberty
-:page-tags: ['Social Login', 'Java EE', 'Jakarta EE']
+:page-tags: ['Social Media Login', 'Java EE', 'Jakarta EE']
 :page-related-guides: ['rest-client-java', 'rest-client-angularjs']
 :page-permalink: /guides/{projectid}
-:page-seo-title: Securing a REST service with Social Login
-:page-seo-description: A tutorial on how to secure a REST service in Open Liberty using the SocialLogin feature
+:page-seo-title: Securing a RESTful web service with Social Media Login
+:page-seo-description: A tutorial on how to secure a RESTful web service in Open Liberty using the SocialLogin feature
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/master
-= Securing a RESTful web service with Social Login
+= Securing a RESTful web service with Social Media Login
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].
 
-Learn how to secure a REST service with the Open Liberty Social Login feature.
+Learn how to secure a RESTful web service with the Open Liberty Social Media Login feature.
 
 == What you'll learn
 
-You will learn how to secure and test a simple REST service with SocialLogin. You will secure an existing service,
+You will learn how to secure a simple RESTful web service using the https://openliberty.io/docs/ref/feature/#socialLogin-1.0.html[Social Media Login feature]. You will secure an existing service,
 `HelloService` using social media OAuth2 and OpenID Connect.
-You will secure your `Hello` service with three social media login choices:
-
-1. Github login
-2. Amazon login
-3. Google login
 
 `HelloService` is an existing microservice that responds to a `GET` request with a Plain Text response that looks like this:
 
@@ -45,26 +39,43 @@ You will secure your `Hello` service with three social media login choices:
 Hello, friend!
 ----
 
-In order to secure this endpoint, you will use the Open Liberty `SocialLogin` feature.
-This feature allows you to easily secure your service
+Instead of securing your `HelloService` service by implementing your own authentication service,
+you can allow users to authenticate to your service using social media accounts.
+This will allow you to provide a secure authentication method for your users without having to explicitly implement it.
 
-=== Prerequisites
+Open Liberty provides a https://openliberty.io/docs/ref/feature/#socialLogin-1.0.html[Social Media Login feature]
+that provides configuration elements that allows you to use Facebook, Google, Github, Linkedin for authentication,
+or to configure a custom OAuth2 or OpenID Connect provider.
 
-Before you can run/build the application, you will need to add the social media domains' certificates to the truststore for social login.
-The application you will build in this guide requires certificates for Amazon, Google and Github to be added to the truststore.
-You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the keystore for social login.
+By the end of this guide, you will secure your `HelloService` service with three social media login choices:
+
+1. Github login
+2. Amazon login
+3. Google login
+
+// =================================================================================================
+// Getting Started
+// =================================================================================================
+[role='command']
+include::{common-includes}/gitclone.adoc[]
+
+== Setting up the certificates and trust store
+
+Before you can build the application, you will need to add the social media domains' certificates to the trust store for social media login.
+The application you will build in this guide requires certificates for Amazon, Google and Github to be added to the trust store.
+You also need to create certificates that your application will provide for HTTPS connections. This certificate and private key will need to be added to the key store for social media login.
 Lastly, you need to create applications on the three social media developer platforms to obtain a client ID and client secret to use their APIs.
 
-To get the certificates for Amazon, Google and Github,
+To get the certificates for Amazon, Google and Github, use a browser.
+For example, open the website on Firefox.
 
-1. Open the website on Firefox.
-2. Click on the button next to "Connection Secure".
-3. Click on "More Information".
-4. Click on "View Certificate".
-5. Download each certificate in the chain as a separate `PEM` file.
+1. Click on the button next to "Connection Secure".
+2. Click on "More Information".
+3. Click on "View Certificate".
+4. Download each certificate in the chain as a separate `PEM` file.
 
 Once you have the certificates downloaded, you need to add them to the trust store.
-As part of the guide, you will be configuring the application's trust store to be `slts.p12` whose password is `changeit`.
+As part of the guide, you will configure the application's trust store to be `slts.p12` whose password is `changeit`.
 Run the following command to add a certificate to the trust store. The command also creates the trust store file if it doesn't exist.
 [role='command']
 ```
@@ -84,8 +95,8 @@ Combine your key and certificate by running the following command:
 openssl pkcs12 -inkey key.pem -in cert.pem -export -out certificate.p12
 ```
 
-The key store to be used by social login will be configured to be `key.p12` whose password is `changeit`.
-To import your certificate bundle into this keystore, run the following command:
+The key store to be used by social media login will be configured to be `key.p12` whose password is `changeit`.
+To import your certificate bundle into this key store, run the following command:
 [role='command']
 ```
 keytool -importkeystore -srckeystore certificate.p12 -srcstoretype PKCS12 -destkeystore key.p12 -deststoretype PKCS12
@@ -107,113 +118,56 @@ Set the redirect URL to `https://localhost:9443/ibm/api/social-login/redirect/gi
 
 In order to try what you'll build, enter the client IDs and client secrets to `server.xml` in the `finish` folder.
 
-=== Try what you'll build
+== Securing HelloService
 
-The `finish` directory in the root of this guide contains the finished application. Give it a try before you proceed.
-
-To try out the application, first go to the `finish` directory and run the following Maven 
-goal to build the application and deploy it to Open Liberty:
-[role='command']
-```
-mvn liberty:run
-```
-
-Check out the service at the
-http://localhost:9080/api/hello[^] URL.
-
-After you are done checking out the application, stop the Open Liberty server by pressing `CTRL+C`
-in the shell session where you ran the server. Alternatively, you can run the `liberty:stop` goal 
-from the `finish` directory in another shell session:
-
-[role='command']
-```
-mvn liberty:stop
-```
-
-== Securing the JAX-RS service
-
-Navigate to the `start` directory to begin.
-
-Start Open Liberty in development mode, which starts the Open Liberty server and listens 
-for file changes:
-
-[role="command"]
-```
-mvn liberty:dev
-```
-
-The `socialLogin` feature provides the following social login configurations:
-
-1. `facebookLogin`
-2. `githubLogin`
-3. `googleLogin`
-4. `linkedinLogin`
-
-The feature also provides the `oauth2Login` and `oidcLogin` configuration elements for creating custom social media login configurations.
-In this guide, you will secure your `Hello` service with three social media login choices:
-
-1. Github login using `githubLogin`
-2. Amazon login using a custom `oauth2Login`
-3. Google login using a custom `oidcLogin`
-
-=== Securing Hello Service
-
-[role="code_command hotspot" ,subs="quotes"]
-----
-#Update the `HelloService` class.#
+[role="code_command", subs="quotes"] 
+---- 
+#Update this `HelloService` class.#
 `src/main/java/io/openliberty/guides/sociallogin/HelloService.java`
-----
+---- 
 
 The [hotspot=helloService]`HelloService` class is the JAX-RS service that you will be securing.
 Add the [hotspot=rolesAllowed]`@RolesAllowed({"users"})` annotation to restrict access to the service to users who are
 in the `Users` role.
-
-HelloService.java
-[source, Java, linenums, role='code_column hide_tags=comment']
-----
-include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[]
-----
 
 Next, you will replace the `return "Hello, friend!";` to output user information instead of `friend`.
 
 First, add the [hotspot=httpServletRequestContext]`HttpServletRequest` context.
 Next, use [hotspot=userPrincipal]`request.getUserPrincipal()` to get information about the logged in user.
 
+HelloService.java 
+[source, Java, linenums, role='code_column hide_tags=copyright'] 
+---- 
+include::finish/src/main/java/io/openliberty/guides/sociallogin/HelloService.java[]
+---- 
+
+== Configuring the security and social media login
+
+[role="code_command", subs="quotes"] 
+---- 
+#Replace this `server.xml` class.#
+`src/main/liberty/config/server.xml`
+---- 
+
+server.xml 
+[source, xml, linenums, role='code_column'] 
+---- 
+include::finish/src/main/liberty/config/server.xml[tags=**;!copyright;]
+---- 
+
+Replace the contents of `src/main/liberty/config/server.xml`.
+The explanation for these changes are in the following sections.
+
 === Configuring the security roles
 
-[role="code_command hotspot", subs="quotes"]
-----
-#Update the `server.xml` file.#
-`src/main/liberty/config/server.xml`
-----
+The [hotspot=applicationBnd]`application-bnd` configuration element under the
+[hotspot=webApplication]`webApplication` configuration element creates a new security role `users`,
+which all authenticated users belong to.
+Adding this allows users that are authenticated using social media login to access your `HelloService` service.
 
-Server.xml
-[source, xml, linenums, role='code_column hide_tags=comment']
-----
-include::finish/src/main/liberty/config/server.xml[]
-----
+=== Adding required features
 
-Modify the [hotspot=webApplication]`webApplication` tag in `server.xml` to create the security role `users` by adding
-the [hotspot=applicationBnd]`application-bnd` element:
-
-The [hotspot=applicationBnd]`application-bnd` configuration element creates a new security role `users`, which all authenticated users belong to. Adding this allows
-users that are authenticated using social media login to access your `HelloService` service.
-
-=== Configuring the server to add social media login
-
-[role="code_command hotspot", subs="quotes"]
-----
-#Update the `server.xml` file.#
-`start/src/main/liberty/config/server.xml`
-----
-
-Server.xml
-[source, xml, linenums, role='code_column hide_tags=comment']
-----
-include::finish/src/main/liberty/config/server.xml[]
-----
-
-Add the following OpenLiberty [hotspot=features]`feature elements` to `server.xml`:
+The following OpenLiberty [hotspot=features]`feature elements` enable Social Media Login and other related features:
 
 [role="command"]
 ----
@@ -224,60 +178,42 @@ Add the following OpenLiberty [hotspot=features]`feature elements` to `server.xm
 <feature>jwt-1.0</feature>
 ----
 
-These features enable SocialLogin and other related features.
+There are some prerequisite configurations that social media login configuration elements need:
 
-Before you add social media login configuration elements, there are some prerequisite configurations that need to be made:
+1. A `keyStore` configuration element that corresponds to the key store created in the prerequisites section
+2. A `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
+3. An `ssl` configuration element for configuring the SSL configuration that is used to connect to the social media
 
-1. Create a `keyStore` configuration element that corresponds to the key store created in the prerequisites section
-2. Create a `keyStore` configuration element that corresponds to the trust store created in the prerequisites section
-3. Create an `ssl` configuration element for configuring the SSL configuration that is used to connect to the social media
+=== Adding key store and trust store
 
-=== Configuring SSL for social media login
-
-[role="code_command hotspot", subs="quotes"]
-----
-#Update the `server.xml` file.#
-`src/main/liberty/config/server.xml`
-----
-
-server.xml
-[source, xml, linenums, role='code_column hide_tags=comment']
-----
-include::finish/src/main/liberty/config/server.xml[]
-----
-
-In the prerequisites section, you created two key stores, `slts.p12` and `key.p12`. Now you will configure your application
-to use these key stores. Files in the `src/liberty` folder are copied into the location specified by `${server.output.dir}`,
+In the first section, you created two key stores, `slts.p12` and `key.p12`.
+Now you will configure your application to use these key stores.
+Files in the `src/liberty` folder are copied into the location specified by `${server.output.dir}`,
 so the location of these key stores is `${server.output.dir}/resources/security`.
 
-Create a [hotspot=keystore]`keyStore` configuration element whose location is `${server.output.dir}/resources/security/key.p12`.
-Provide the password that you used when creating the key store. This `defaultKeyStore` will be used to provide SSL certificates when initiating HTTPS connections for social media login.
+The [hotspot=keystore]`defaultKeyStore` configuration element whose location is `${server.output.dir}/resources/security/key.p12`
+will be used to provide SSL certificates when initiating HTTPS connections for social media login.
+Provide the password that you used when creating the key store.
 
-Next, create a [hotspot=truststore]`keyStore` configuration element whose locaiton is `${server.output.dir}/resources/security/slts.p12`.
-Provide the password that you usd when creating the trust store. This `socialLoginKeyStore` will be usd to store trusted certificates when initiating HTTPS connections to social media APIs for authorization and authentication.
+The [hotspot=truststore]`socialLoginKeyStore` configuration element whose locaiton is `${server.output.dir}/resources/security/slts.p12`
+will be used to store trusted certificates when initiating HTTPS connections to social media APIs for authorization and authentication.
+Provide the password that you usd when creating the trust store.
 
-Finally, create a [hotspot=sslConfig]`ssl` configuration element which references `defaultKeyStore` as the key store and `socialLoginKeyStore` as the trust store.
-This SSL configuration will be provided to social media login configurations.
-
-== Adding social media login configurations
+The [hotspot=sslConfig]`authServiceSslRef` configuration element which references [hotspot=keystore]`defaultKeyStore` as the key store
+and [hotspot=truststore]`socialLoginKeyStore` as the trust store will be provided to social media login configurations.
 
 === Adding Github login configuration
 
-First, you will configure Github login using the `githubLogin` configuration element.
-
-Create a [hotspot=githubLogin]`githubLogin` configuration using the `clientId` and `clientSecret` for your Github application
-that you created in the prerequisites section. Add the ID of the [hotspot=sslConfig]`ssl` configuration that you created in the previous section
-to the `sslRef` attribute of `githubLogin`.
-
-When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
-you should be redirected to the Github login page for your application.
+The [hotspot=githubLogin]`githubLogin` configuration element will configure Github login.
+The `clientId` and `clientSecret` for [hotspot=githubLogin]`githubLogin` should be the credentials you created for your Github application
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
 
 === Adding Amazon login configuration
 
-Next, you will configure Amazon login using a custom `oauth2Login` configuration element.
-
-Create a [hotspot=amazonLogin]`oauth2Login` configuration using the `clientId` and `clientSecret` for your Amazon application
-that you created in the prerequisites section. Add the following attributes to your [hotspot=amazonLogin]`oauth2Login` configuration element:
+The [hotspot=amazonLogin]`amazonLogin` configuration uses a custom `oauth2Login` configuration element.
+The `clientId` and `clientSecret` for [hotspot=amazonLogin]`amazonLogin` should be the credentials you created for your Amazon application
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
+The following attributes are set for your [hotspot=amazonLogin]`oauth2Login` configuration element:
 
 - `responseType`: `code`
 - `tokenEndpointAuthMethod`: `client_secret_post`
@@ -293,21 +229,14 @@ that you created in the prerequisites section. Add the following attributes to y
 Further documentation on these attributes can be found on the https://openliberty.io/docs/ref/config/oauth2Login.html[Open Liberty config reference on `oauth2Login`].
 The values for these attributes can be found in the https://developer.amazon.com/docs/login-with-amazon/minitoc-lwa-overview.html[Login With Amazon API documentation].
 
-In addition to these attributes, add the ID of the [hotspot=sslConfig]`ssl` configuration that you created in the previous section
-to the `sslRef` attribute of [hotspot=amazonLogin]`oauth2Login`.
-
-When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
-you should be redirected to a Social Media Login Form. This form allows you to choose which login provider you want to use
-for authentication. When you select a login choice, you will be redirected to the login page of that service.
-
 Make sure that the `id` of your [hotspot=amazonLogin]`oauth2Login` configuration matches the redirect URL (if you set the `id` to `amazonLogin`, the redirect URL must end with `.../amazonLogin`).
 
 === Adding Google login configuration
 
-Lastly, you will configure Google login using a custom `oidcLogin` configuration element.
-
-Create a [hotspot=googleOIDCLogin]`oidcLogin` configuration element using the `clientId` and `clientSecret` for your Google application
-that you created in the prerequisites section. Add the following attributes to your [hotspot=googleOIDCLogin]`oidcLogin` configuration element:
+The [hotspot=googleOIDCLogin]`googleOIDCLogin` configuration uses a custom `oidcLogin` configuration element.
+The `clientId` and `clientSecret` for [hotspot=googleOIDCLogin]`googleOIDCLogin` should be the credentials you created for your Google application
+in the prerequisites section. The `sslRef` attribute is set to the [hotspot=sslConfig]`authServiceSslRef` configuration from the previous section.
+The following attributes are set for your [hotspot=googleOIDCLogin]`oidcLogin` configuration element:
 
 - `displayName`: `Google`
 - `authorizationEndpoint`: `https://accounts.google.com/o/oauth2/v2/auth`
@@ -321,13 +250,6 @@ that you created in the prerequisites section. Add the following attributes to y
 Further documentation on these attributes can be found on the https://openliberty.io/docs/ref/config/oidcLogin.html[Open Liberty config reference on `oidcLogin`].
 The values of these attributes can be found in the https://developers.google.com/identity/protocols/OpenIDConnect[Google API documentation].
 
-In addition to these attributes, add the ID of the [hotspot=sslConfig]`ssl` configuration that you created in the previous section
-to the `sslRef` attribute of [hotspot=googleOIDCLogin]`oidcLogin`.
-
-When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
-you should be redirected to a Social Media Login Form. This form allows you to choose which login provider you want to use
-for authentication. When you select a login choice, you will be redirected to the login page of that service.
-
 Make sure that the `id` of your [hotspot=googleOIDCLogin]`oidcLogin` configuration matches the redirect URL (if you set the `id` to `googleOIDCLogin`, the redirect URL must end with `.../googleOIDCLogin`).
 
 == Building and running the application
@@ -337,6 +259,18 @@ changes were automatically picked up.
 
 Check out the service that you created at the
 http://localhost:9080/api/hello[^] URL.
+
+When the server updates its configuration, when you access https://localhost:9080/api/hello[the endpoint for Hello service],
+you should be redirected to a Social Media Login Form. This form allows you to choose which login provider you want to use
+for authentication. When you select a login choice, you will be redirected to the login page of that service.
+
+Try logging in using your social media accounts. After authenticating, you will be redirected back to https://localhost:9080/api/hello and the response will look like this:
+
+[source,role="no_copy"]
+----
+Hello, <<your username>>
+WSPrincipal:<<your username>>
+----
 
 == Testing the service
 
@@ -351,7 +285,7 @@ does the latter.
 
 [role="code_command hotspot", subs="quotes"]
 ----
-#Create the `EndpointIT` class.#
+#Update the `EndpointIT` class.#
 `src/test/java/it/io/openliberty/guides/rest/EndpointIT.java`
 ----
 
@@ -364,34 +298,17 @@ include::finish/src/test/java/it/io/openliberty/guides/sociallogin/EndpointIT.ja
 This test class has more lines of code than the resource implementation. This situation is common.
 The test method is indicated with the [hotspot=test file=0]`@Test` annotation.
 
-pom.xml
-[source , xml, linenums,role="code_column"]
-----
-include::finish/pom.xml[]
-----
-
-The test code needs to know some information about the application to make requests.
-The server port and the application context root are key, and are dictated by the server configuration.
-While this information can be hardcoded, it is better to specify it in a single place like the Maven [hotspot=defaultHttpPort hotspot=defaultHttpsPort hotspot=appContextRoot file=1]`pom.xml` file.
-Refer to the [hotspot file=1]`pom.xml` file to see how the application information such as the [hotspot=defaultHttpPort file=1]`default.http.port`, [hotspot=defaultHttpsPort file=1]`default.https.port` and [hotspot=appContextRoot file=1]`app.context.root` elements are provided in the file.
-
-
-These Maven properties are then passed to the Java test program as the [hotspot=testsysprops file=1]`<systemPropertyVariables/>` element in the [hotspot file=1]`pom.xml` file.
-
-Getting the values to create a representation of the URL is simple. The test class uses the [hotspot=systemProperties file=0]`getProperty` method
-to get the application details.
-
 To call the JAX-RS service using the JAX-RS client, first create a `WebTarget` object by calling
-the [hotspot=target file=0]`target` method that provides the URL. To cause the HTTP request to occur, the [hotspot=requestget file=0]`request().get()` method
-is called on the `WebTarget` object. The [hotspot=requestget file=0]`get` method
-call is a synchronous call that blocks until a response is received. This call returns a [hotspot=requestget file=0]`Response`
+the [hotspot=target]`target` method that provides the URL. To cause the HTTP request to occur, the [hotspot=requestget]`request().get()` method
+is called on the `WebTarget` object. The [hotspot=requestget]`get` method
+call is a synchronous call that blocks until a response is received. This call returns a [hotspot=requestget]`Response`
 object, which can be inspected to determine whether the request was successful.
 
-The first thing to check is that a `200` response was received. The JUnit [hotspot=assertequals file=0]`assertEquals` method can be used for this check.
+The first thing to check is that a `200` response was received. The JUnit [hotspot=assertequals]`assertEquals` method can be used for this check.
 
 Check the response body to ensure it returned the right information.
 You need to check whether the request gets redirected to the social media login form.
-You can do this by looking for the string [hotspot=assertredirect file=0]`"Social Media Selection Form"` in the response string.
+You can do this by looking for the string [hotspot=assertredirect]`"Social Media Selection Form"` in the response string.
 
 === Running the tests
 
@@ -420,7 +337,7 @@ you ran the server and then pressing the `enter/return` key.
 
 == Great work! You're done!
 
-You secured and tested a simple REST service in Open Liberty by using the Social Login feature.
+You secured and tested a simple RESTful web service in Open Liberty by using the Social Media Login feature.
 
 == Related Links
 

@@ -15,20 +15,30 @@
 
     <!-- Set up default key store, trust stores for auth APIs -->
     <!-- tag::keystore[] -->
-    <keyStore id="defaultKeyStore" location="${server.output.dir}/resources/security/key.p12" password="changeit" type="PKCS12" />
+    <keyStore id="defaultKeyStore"
+              location="${server.output.dir}/resources/security/key.p12"
+              password="changeit"
+              type="PKCS12" />
     <!-- end::keystore[] -->
     <!-- tag::truststore[] -->
-    <keyStore id="socialLoginKeyStore" location="${server.output.dir}/resources/security/slts.p12" password="changeit" type="PKCS12" />
+    <keyStore id="socialLoginKeyStore"
+              location="${server.output.dir}/resources/security/slts.p12"
+              password="changeit"
+              type="PKCS12" />
     <!-- end::truststore[] -->
     <!-- SSL configuration for auth services -->
     <!-- tag::sslConfig[] -->
-    <ssl id="authServiceSslRef" keyStoreRef="defaultKeyStore" trustStoreRef="socialLoginKeyStore" />
+    <ssl id="authServiceSslRef"
+         keyStoreRef="defaultKeyStore"
+         trustStoreRef="socialLoginKeyStore" />
     <!-- end::sslConfig[] -->
 
     <!-- Social Login Configuration -->
     <!-- Github Login -->
     <!-- tag::githubLogin[] -->
-    <githubLogin clientId="" clientSecret="" sslRef="authServiceSslRef"/>
+    <githubLogin clientId="" 
+                 clientSecret=""
+                 sslRef="authServiceSslRef"/>
     <!-- end::githubLogin[] -->
     <!-- Amazon Login -->
     <!-- tag::amazonLogin[] -->
