@@ -9,6 +9,8 @@ set -euxo pipefail
 
 # LMP 3.0+ goals are listed here: https://github.com/OpenLiberty/ci.maven#goals
 
+echo "$test"
+
 ## Rebuild the application
 #       package                   - Take the compiled code and package it in its distributable format.
 #       liberty:create            - Create a Liberty server.
