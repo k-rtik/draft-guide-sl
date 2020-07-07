@@ -4,7 +4,7 @@ before_script:
 - cd finish
 - chmod +x ../scripts/travisTest.sh
 script:
-- echo "$TEST"
+- ../scripts/travisTest.sh
 branches:
   only:
   - master
